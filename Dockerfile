@@ -3,17 +3,18 @@ FROM ubuntu:20.04 AS buck
 
 ARG BUCK_VERSION=2021.01.12.01
 ENV ANT_OPTS="-Xmx4096m"
+
 RUN apt update  && apt install  -y --no-install-recommends \
     ant \
     git \
-    openjdk-11-jdk-headless \
+    openjdk-14-jdk-headless \
     python-setuptools \
     python3-setuptools
 # install buck by compiling it from source. We also remove the buck repo once it's built.
 RUN git clone --depth 1 --branch v${BUCK_VERSION} https://github.com/facebook/buck.git \
     && cd buck \
     && ant \
-    && ./bin/buck build buck --config java.target_level=11 --config java.source_level=11 --out /tmp/buck.pex
+    && ./bin/buck build buck --config java.target_level=14 --config java.source_level=14 --out /tmp/buck.pex
 
 # build react native image and use buck built from source from above stage
 FROM ubuntu:20.04
@@ -24,7 +25,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # set default build arguments
 ARG SDK_VERSION=commandlinetools-linux-7302050_latest.zip
 ARG ANDROID_BUILD_VERSION=31
-ARG ANDROID_TOOLS_VERSION=31.0.0
+ARG ANDROID_TOOLS_VERSION=29.0.3
 ARG NDK_VERSION=21.4.7075529
 ARG NODE_VERSION=14.x
 ARG WATCHMAN_VERSION=4.9.0
@@ -55,7 +56,7 @@ RUN apt update -qq && apt install -qq -y --no-install-recommends \
         libgl1 \
         libtcmalloc-minimal4 \
         make \
-        openjdk-11-jdk-headless \
+        openjdk-14-jdk-headless \
         openssh-client \
         patch \
         python3 \
