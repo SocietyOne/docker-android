@@ -123,3 +123,7 @@ RUN curl -sS https://dl.google.com/android/repository/${SDK_VERSION} -o /tmp/sdk
 
 # install fastlane
 RUN gem install fastlane
+
+RUN echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /root/.profile
+RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+RUN brew install bundletool
